@@ -38,6 +38,7 @@ dependencies:
   google_fonts: ^6.1.0
   # for auto generating id
   uuid: ^4.3.3
+  flutter_riverpod: ^2.4.10
 
 dev_dependencies:
   flutter_test:
