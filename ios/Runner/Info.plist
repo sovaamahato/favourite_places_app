@@ -54,5 +54,8 @@
 
 	<key>NSMicrophoneUsageDescription</key>
 	<string>To record video.</string>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>To get the location of your favourite place.</string>
 </dict>
 </plist>
