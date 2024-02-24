@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,72 +18,108 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  PlaceLocation? _pickedLocation;
-  var _isGettingLocation = false;
+  // PlaceLocation? _pickedLocation;
+  // var _isGettingLocation = false;
 
-  void _getCurrentLocation() async {
-    Location location = Location();
+  // void _getCurrentLocation() async {
+  //   Location location = Location();
 
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
+  //   bool serviceEnabled;
+  // PermissionStatus permissionGranted;
+  // LocationData locationData;
 
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
+  // serviceEnabled = await location.serviceEnabled();
+  // if (!serviceEnabled) {
+  //   serviceEnabled = await location.requestService();
+  //   if (!serviceEnabled) {
+  //     return;
+  //   }
+  // }
+
+  // permissionGranted = await location.hasPermission();
+  // if (permissionGranted == PermissionStatus.denied) {
+  //   permissionGranted = await location.requestPermission();
+  //   if (permissionGranted != PermissionStatus.granted) {
+  //     return;
+  //   }
+  // }
+  // setState(() {
+  //   _isGettingLocation = true;
+  // });
+
+  // locationData = await location.getLocation();
+  // final lat = locationData.latitude;
+  // final lng = locationData.longitude;
+  // if (lat == null || lng == null) {
+  //   return;
+  // }
+  // final url = Uri.parse(
+  //       'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=...');
+  //   final response = await http.get(url);
+
+  //   final resData = json.decode(response.body);
+  //   final address = resData['results'][0]['formatted_address'];
+
+  //   setState(() {
+  //     _pickedLocation = PlaceLocation(
+  //       latitude: lat,
+  //       longitude: lng,
+  //       address: address,
+  //     );
+  //     _isGettingLocation = false;
+  //   });
+  //   print(locationData.latitude);
+  //   print(locationData.longitude);
+  // }
+
+  Position? _currentLocation;
+  late bool servicePermission = false;
+  late LocationPermission permission;
+  String _currentAddress = "";
+  bool locationSelected = false;
+
+  Future<Position> _getCurrentLocation() async {
+    //checking permission to access location----------------------
+    servicePermission = await Geolocator.isLocationServiceEnabled();
+    if (!servicePermission) {
+      print("Service denied");
     }
-
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
     }
-    setState(() {
-      _isGettingLocation = true;
-    });
+    return Geolocator.getCurrentPosition();
+  }
 
-    locationData = await location.getLocation();
-    final lat = locationData.latitude;
-    final lng = locationData.longitude;
-    if (lat == null || lng == null) {
-      return;
+  //geocode the coordinates and convert into actual adress
+  _getAdressFromCoordinates() async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          _currentLocation!.latitude, _currentLocation!.longitude);
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress = "${place.locality}, ${place.country}";
+        locationSelected = true;
+      });
+    } catch (e) {
+      print(e);
     }
-    final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=...');
-    final response = await http.get(url);
-
-    final resData = json.decode(response.body);
-    final address = resData['results'][0]['formatted_address'];
-
-    setState(() {
-      _pickedLocation = PlaceLocation(
-        latitude: lat,
-        longitude: lng,
-        address: address,
-      );
-      _isGettingLocation = false;
-    });
-    print(locationData.latitude);
-    print(locationData.longitude);
   }
 
   @override
   Widget build(BuildContext context) {
+//in case location is not selected
+    setState(() {});
     Widget previewContent = Text(
-      "No location choosen",
+      locationSelected ? "${_currentAddress}" : "No location choosen",
       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
             color: Theme.of(context).colorScheme.onBackground,
           ),
       textAlign: TextAlign.center,
     );
-    if (_isGettingLocation) {
-      previewContent = const CircularProgressIndicator();
-    }
+    // //if (_isGettingLocation) {
+    // previewContent = const CircularProgressIndicator();
+    // //}
 
     return Column(
       children: [
@@ -100,7 +138,14 @@ class _LocationInputState extends State<LocationInput> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton.icon(
-              onPressed: _getCurrentLocation,
+              onPressed: () async {
+                //get current location here
+                _currentLocation = await _getCurrentLocation();
+                await _getAdressFromCoordinates();
+                print("------------------------");
+                print("$_currentLocation");
+                print("${_currentAddress}");
+              },
               icon: const Icon(
                 Icons.location_on,
               ),
