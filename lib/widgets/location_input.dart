@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:latlong2/latlong.dart';
 import '../models.dart';
 
 class LocationInput extends StatefulWidget {
@@ -18,9 +20,7 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
-  // PlaceLocation? _pickedLocation;
-  // var _isGettingLocation = false;
-
+  //api key use garyo vane chai this code will be used---------------------------------------------
   // void _getCurrentLocation() async {
   //   Location location = Location();
 
@@ -71,7 +71,49 @@ class _LocationInputState extends State<LocationInput> {
   //   print(locationData.latitude);
   //   print(locationData.longitude);
   // }
+  //------------------------------------------------------------------------
 
+  PlaceLocation? _pickedLocation;
+  var _isGettingLocation = false;
+
+  //map images ko lagi  -------------------------------------
+  Widget buildMapPreview() {
+    if (_pickedLocation == null) {
+      return Container(); // Return an empty container if no location is selected
+    }
+
+    return Container(
+      child: FlutterMap(
+        options: MapOptions(
+          initialCenter:
+              LatLng(_pickedLocation!.latitude, _pickedLocation!.longitude),
+          initialZoom: 10.0,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            //subdomains: ['a', 'b', 'c'],
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                width: 50,
+                height: 60,
+                point: LatLng(
+                    _pickedLocation!.latitude, _pickedLocation!.longitude),
+                child: const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+//--------------------------------------------------
   Position? _currentLocation;
   late bool servicePermission = false;
   late LocationPermission permission;
@@ -100,6 +142,15 @@ class _LocationInputState extends State<LocationInput> {
       setState(() {
         _currentAddress = "${place.locality}, ${place.country}";
         locationSelected = true;
+
+        //   setState(() {
+        _pickedLocation = PlaceLocation(
+          latitude: _currentLocation!.latitude,
+          longitude: _currentLocation!.longitude,
+          address: _currentAddress,
+        );
+        _isGettingLocation = false;
+        //   });
       });
     } catch (e) {
       print(e);
@@ -117,9 +168,12 @@ class _LocationInputState extends State<LocationInput> {
           ),
       textAlign: TextAlign.center,
     );
-    // //if (_isGettingLocation) {
-    // previewContent = const CircularProgressIndicator();
-    // //}
+    if (_isGettingLocation) {
+      previewContent = const CircularProgressIndicator();
+    } else if (_pickedLocation != null) {
+      previewContent =
+          buildMapPreview(); // Use the FlutterMap preview if location is selected
+    }
 
     return Column(
       children: [

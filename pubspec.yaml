@@ -42,8 +42,25 @@ dependencies:
   image_picker: ^1.0.7
   location: ^5.0.3
   http: ^1.2.0
+  #to get the curent location .it will give latitude and longitude
   geolocator: ^11.0.0
+  #to convert the longitude and latitude into acutual address
   geocoding: ^2.2.0
+
+  #map ko lagi try
+  flutter_map: 
+  tuple:  
+  positioned_tap_detector_2: ^1.0.0
+  transparent_image: 
+  async: ^2.1.0
+  flutter_image: 
+  vector_math: ^2.0.0
+  proj4dart: 
+  meta: ^1.1.0
+  collection: ^1.14.0
+  latlng: ^2.0.7
+  latlong2: ^0.9.0
+
 
 dev_dependencies:
   flutter_test:
