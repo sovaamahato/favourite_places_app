@@ -13,7 +13,8 @@ import 'package:latlong2/latlong.dart';
 import '../models.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
+  const LocationInput({super.key, required this.onSelectLocation});
+  final void Function(PlaceLocation location) onSelectLocation;
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -143,15 +144,14 @@ class _LocationInputState extends State<LocationInput> {
         _currentAddress = "${place.locality}, ${place.country}";
         locationSelected = true;
 
-        //   setState(() {
         _pickedLocation = PlaceLocation(
           latitude: _currentLocation!.latitude,
           longitude: _currentLocation!.longitude,
           address: _currentAddress,
         );
         _isGettingLocation = false;
-        //   });
       });
+      widget.onSelectLocation(_pickedLocation!);
     } catch (e) {
       print(e);
     }
