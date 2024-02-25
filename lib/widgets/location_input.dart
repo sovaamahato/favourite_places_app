@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:favourite_places_app/screens/map_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -206,7 +207,18 @@ class _LocationInputState extends State<LocationInput> {
               label: const Text("Get Current Location"),
             ),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () async {
+                //get the current location first to show your current position on map and then navigate
+                _currentLocation = await _getCurrentLocation();
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => MapScreen(
+                      currentLocation: _currentLocation,
+                    ),
+                  ),
+                );
+              },
               icon: const Icon(
                 Icons.map,
               ),
