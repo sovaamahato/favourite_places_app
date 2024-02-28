@@ -14,7 +14,7 @@ class MapScreen extends StatefulWidget {
   });
   PlaceLocation currentLocation;
   final bool isSelecting;
-  String currentAddress = "no zddress";
+  String currentAddress = "no address";
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -52,17 +52,25 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(widget.isSelecting ? "Pick you location" : 'Your location'),
-      //   actions: [
-      //     if (widget.isSelecting)
-      //       IconButton(
-      //         icon: Icon(Icons.save),
-      //         onPressed: () {},
-      //       )
-      //   ],
-      // ),
-
+      appBar: AppBar(
+        title: Text(
+          _pickedLocation != null
+              ? widget.currentAddress
+              : widget.currentLocation.address,
+          // style: const TextStyle(
+          //   color: Colors.black,
+          // ),
+        ),
+        actions: [
+          if (widget.isSelecting)
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () {
+                Navigator.of(context).pop(_pickedLocation);
+              },
+            )
+        ],
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -121,25 +129,32 @@ class _MapScreenState extends State<MapScreen> {
                   const EdgeInsets.symmetric(vertical: 15, horizontal: 16.0),
               child: Column(
                 children: [
-                  const Card(
-                    child: TextField(
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.location_on_outlined,
-                          ),
-                          hintText: "Search for location",
-                          hintStyle: TextStyle(color: Colors.grey),
-                          contentPadding: EdgeInsets.all(15)),
+                  //this is the search bar ----will be added later-------------------
+                  // Card(
+                  //   child: TextField(
+                  //     decoration: InputDecoration(
+                  //         prefixIcon: Icon(
+                  //           Icons.location_on_outlined,
+                  //         ),
+                  //         hintText: _pickedLocation != null
+                  //             ? widget.currentAddress
+                  //             : "Search for location",
+                  //         hintStyle: TextStyle(color: Colors.grey),
+                  //         contentPadding: EdgeInsets.all(15)),
+                  //   ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: Text(
+                      textAlign: TextAlign.start,
+                      _pickedLocation != null
+                          ? widget.currentAddress
+                          : widget.currentLocation.address,
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.all(18),
-                      child: Text(
-                        _pickedLocation != null
-                            ? widget.currentAddress
-                            : widget.currentLocation.address,
-                        style: TextStyle(color: Colors.black),
-                      ))
                 ],
               ),
             )

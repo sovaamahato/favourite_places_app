@@ -115,6 +115,25 @@ class _LocationInputState extends State<LocationInput> {
     );
   }
 
+  //save place from map screen
+  Future<void> _savePlace(double latitude, double longitude) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+    Placemark place = placemarks[0];
+    setState(() {
+      _currentAddress = "${place.locality}, ${place.country}";
+      locationSelected = true;
+
+      _pickedLocation = PlaceLocation(
+        latitude: latitude,
+        longitude: longitude,
+        address: _currentAddress,
+      );
+      _isGettingLocation = false;
+    });
+    widget.onSelectLocation(_pickedLocation!);
+  }
+
 //--------------------------------------------------
   Position? _currentLocation;
   late bool servicePermission = false;
@@ -141,21 +160,8 @@ class _LocationInputState extends State<LocationInput> {
   //geocode the coordinates and convert into actual adress
   _getAdressFromCoordinates() async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          _currentLocation!.latitude, _currentLocation!.longitude);
-      Placemark place = placemarks[0];
-      setState(() {
-        _currentAddress = "${place.locality}, ${place.country}";
-        locationSelected = true;
-
-        _pickedLocation = PlaceLocation(
-          latitude: _currentLocation!.latitude,
-          longitude: _currentLocation!.longitude,
-          address: _currentAddress,
-        );
-        _isGettingLocation = false;
-      });
-      widget.onSelectLocation(_pickedLocation!);
+      ///////////////////////////
+      _savePlace(_currentLocation!.latitude, _currentLocation!.longitude);
     } catch (e) {
       print(e);
     }
@@ -192,6 +198,14 @@ class _LocationInputState extends State<LocationInput> {
               ),
             ),
             child: previewContent),
+        SizedBox(
+          height: 8,
+        ),
+        //adress show
+        Text(
+          _pickedLocation != null ? _pickedLocation!.address : "",
+          style: TextStyle(color: Colors.white),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -200,9 +214,6 @@ class _LocationInputState extends State<LocationInput> {
                 //get current location here
                 _currentLocation = await _getCurrentLocation();
                 await _getAdressFromCoordinates();
-                print("------------------------");
-                print("$_currentLocation");
-                print("${_currentAddress}");
               },
               icon: const Icon(
                 Icons.location_on,
@@ -217,13 +228,20 @@ class _LocationInputState extends State<LocationInput> {
                   await _getAdressFromCoordinates();
                 }
 
-                Navigator.of(context).push(
+//variable here is to get back the selected value(location) from the map screen
+                final _getLocationFromMapScreen =
+                    await Navigator.of(context).push<LatLng>(
                   MaterialPageRoute(
                     builder: (ctx) => MapScreen(
                       currentLocation: _pickedLocation!,
                     ),
                   ),
                 );
+                if (_getLocationFromMapScreen == null) {
+                  return;
+                }
+                _savePlace(_getLocationFromMapScreen!.latitude,
+                    _getLocationFromMapScreen!.longitude);
               },
               icon: const Icon(
                 Icons.map,
