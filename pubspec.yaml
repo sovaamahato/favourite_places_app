@@ -58,8 +58,15 @@ dependencies:
   proj4dart: 
   meta: ^1.1.0
   collection: ^1.14.0
-  latlng: ^2.0.7
+  latlng: ^2.0.7 
   latlong2: ^0.9.0
+  
+  #to get the path to store image on the mobile phone 
+  path_provider: ^2.1.2
+  path: ^1.8.3
+  #help us creating basic sql database on the device 
+  #not a db on the server , its a db that runs locally where our app runs
+  sqflite: ^2.3.2
 
 
 dev_dependencies:
