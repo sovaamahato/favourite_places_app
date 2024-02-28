@@ -132,6 +132,9 @@ class _LocationInputState extends State<LocationInput> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
+    setState(() {
+      _isGettingLocation = true;
+    });
     return Geolocator.getCurrentPosition();
   }
 
@@ -209,12 +212,15 @@ class _LocationInputState extends State<LocationInput> {
             TextButton.icon(
               onPressed: () async {
                 //get the current location first to show your current position on map and then navigate
-                _currentLocation = await _getCurrentLocation();
+                if (_currentLocation == null) {
+                  _currentLocation = await _getCurrentLocation();
+                  await _getAdressFromCoordinates();
+                }
 
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (ctx) => MapScreen(
-                      currentLocation: _currentLocation,
+                      currentLocation: _pickedLocation!,
                     ),
                   ),
                 );
