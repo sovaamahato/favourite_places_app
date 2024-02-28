@@ -76,20 +76,22 @@ class _MapScreenState extends State<MapScreen> {
           children: [
             FlutterMap(
               options: MapOptions(
-                onTap: (point, LatLng) async {
-                  setState(() {
-                    _pickedLocation = LatLng;
-                  });
+                onTap: !widget.isSelecting
+                    ? null
+                    : (point, LatLng) async {
+                        setState(() {
+                          _pickedLocation = LatLng;
+                        });
 
-                  if (_pickedLocation != null) {
-                    try {
-                      await _getAdressFromCoordinates();
-                    } catch (e) {
-                      print("Error handling address: $e");
-                      // Handle the error or display a message to the user.
-                    }
-                  }
-                },
+                        if (_pickedLocation != null) {
+                          try {
+                            await _getAdressFromCoordinates();
+                          } catch (e) {
+                            print("Error handling address: $e");
+                            // Handle the error or display a message to the user.
+                          }
+                        }
+                      },
                 initialCenter: LatLng(widget.currentLocation!.latitude,
                     widget.currentLocation!.longitude),
                 initialZoom: 10.0,

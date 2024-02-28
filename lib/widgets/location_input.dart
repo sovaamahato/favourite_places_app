@@ -229,19 +229,23 @@ class _LocationInputState extends State<LocationInput> {
                 }
 
 //variable here is to get back the selected value(location) from the map screen
-                final _getLocationFromMapScreen =
-                    await Navigator.of(context).push<LatLng>(
-                  MaterialPageRoute(
-                    builder: (ctx) => MapScreen(
-                      currentLocation: _pickedLocation!,
+
+                if (_currentLocation != null) {
+                  final _getLocationFromMapScreen =
+                      await Navigator.of(context).push<LatLng>(
+                    MaterialPageRoute(
+                      builder: (ctx) => MapScreen(
+                        currentLocation: _pickedLocation!,
+                        isSelecting: true,
+                      ),
                     ),
-                  ),
-                );
-                if (_getLocationFromMapScreen == null) {
-                  return;
+                  );
+                  if (_getLocationFromMapScreen == null) {
+                    return;
+                  }
+                  _savePlace(_getLocationFromMapScreen!.latitude,
+                      _getLocationFromMapScreen!.longitude);
                 }
-                _savePlace(_getLocationFromMapScreen!.latitude,
-                    _getLocationFromMapScreen!.longitude);
               },
               icon: const Icon(
                 Icons.map,

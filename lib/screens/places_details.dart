@@ -1,3 +1,4 @@
+import 'package:favourite_places_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -10,33 +11,35 @@ class PlaceDetailScreen extends StatelessWidget {
 
 //map images ko lagi
   Widget buildMapPreview() {
-    return Container(
-      child: FlutterMap(
-        options: MapOptions(
-          initialCenter:
-              LatLng(place.location.latitude, place.location.longitude),
-          initialZoom: 10.0,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            //subdomains: ['a', 'b', 'c'],
+    return GestureDetector(
+      child: Container(
+        child: FlutterMap(
+          options: MapOptions(
+            initialCenter:
+                LatLng(place.location.latitude, place.location.longitude),
+            initialZoom: 10.0,
           ),
-          MarkerLayer(
-            markers: [
-              Marker(
-                width: 50,
-                height: 60,
-                point:
-                    LatLng(place.location.latitude, place.location.longitude),
-                child: const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                ),
-              )
-            ],
-          )
-        ],
+          children: [
+            TileLayer(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              //subdomains: ['a', 'b', 'c'],
+            ),
+            MarkerLayer(
+              markers: [
+                Marker(
+                  width: 50,
+                  height: 60,
+                  point:
+                      LatLng(place.location.latitude, place.location.longitude),
+                  child: const Icon(
+                    Icons.location_on,
+                    color: Colors.red,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -67,16 +70,28 @@ class PlaceDetailScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     //map image----------------------------------
-                    Container(
-                      height: 80,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(
-                          0,
+                    GestureDetector(
+                      onTap: () {
+                        print(
+                            "-tappedddddddddddddddddddddddddddddddd0===========================");
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (ctx) => MapScreen(
+                                  currentLocation: place.location,
+                                  isSelecting: false,
+                                )));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        height: 80,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(
+                            0,
+                          ),
                         ),
+                        child: preview,
                       ),
-                      child: preview,
                     ),
                     //address-------------
                     Container(
