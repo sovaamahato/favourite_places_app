@@ -14,13 +14,6 @@ class PlacesList extends ConsumerStatefulWidget {
 }
 
 class _PlacesListState extends ConsumerState<PlacesList> {
-  // void _deletePlace(String placeId) {
-  //   ref.read(userPlaceProvider.notifier).deletePlace(placeId);
-  //   // Optionally, you can add code to navigate back or update the UI after deletion.
-  //   // For example, you might want to pop the current screen:
-  //   // Navigator.of(context).pop();
-  // }
-
   @override
   Widget build(BuildContext context) {
     if (widget.places.isEmpty) {
@@ -35,38 +28,122 @@ class _PlacesListState extends ConsumerState<PlacesList> {
       );
     }
     return ListView.builder(
-        itemCount: widget.places.length,
-        itemBuilder: (ctx, index) => ListTile(
-              leading: CircleAvatar(
-                radius: 20,
-                backgroundImage: FileImage(widget.places[index].image),
+      itemCount: widget.places.length,
+      itemBuilder: (ctx, index) => InkWell(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (ctx) => PlaceDetailScreen(
+                place: widget.places[index],
               ),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (ctx) => PlaceDetailScreen(
-                      place: widget.places[index],
-                    ),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                height: 160,
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  child: Image(
+                    isAntiAlias: true,
+                    fit: BoxFit.cover,
+                    image: FileImage(widget.places[index].image),
                   ),
-                );
-              },
-              subtitle: Text(
-                widget.places[index].location.address,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground),
+                ),
               ),
-              title: Text(
-                widget.places[index].title,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.places[index].title,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 19,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.green,
+                            ),
+                            Text(
+                              widget.places[index].location.address,
+                              // style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              //     color: Theme.of(context).colorScheme.onBackground),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            size: 20,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            _deletePlace(context, widget.places[index].id);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              trailing: IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  _deletePlace(context, widget.places[index].id);
-                },
-              ),
-            ));
+            ]),
+          ),
+        ),
+      ),
+      // ListTile(
+      //   leading: CircleAvatar(
+      //     radius: 20,
+      //     backgroundImage: FileImage(widget.places[index].image),
+      //   ),
+      //   onTap: () {
+      //     Navigator.of(context).push(
+      //       MaterialPageRoute(
+      //         builder: (ctx) => PlaceDetailScreen(
+      //           place: widget.places[index],
+      //         ),
+      //       ),
+      //     );
+      //   },
+      //   subtitle: Text(
+      //     widget.places[index].location.address,
+      //     style: Theme.of(context)
+      //         .textTheme
+      //         .bodySmall!
+      //         .copyWith(color: Theme.of(context).colorScheme.onBackground),
+      //   ),
+      //   title: Text(
+      //     widget.places[index].title,
+      //     style: Theme.of(context)
+      //         .textTheme
+      //         .titleMedium!
+      //         .copyWith(color: Theme.of(context).colorScheme.onBackground),
+      //   ),
+      //   trailing: IconButton(
+      //     icon: Icon(Icons.delete),
+      //     onPressed: () {
+      //       _deletePlace(context, widget.places[index].id);
+      //     },
+      //   ),
+      // ),
+    );
   }
 
   void _deletePlace(BuildContext context, String placeId) {

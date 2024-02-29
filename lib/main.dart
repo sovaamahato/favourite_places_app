@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final colorScheme = ColorScheme.fromSeed(
-  brightness: Brightness.dark,
-  seedColor: const Color.fromARGB(255, 102, 6, 247),
-  background: const Color.fromARGB(255, 56, 49, 66),
+  brightness: Brightness.light,
+  seedColor: Color.fromARGB(255, 34, 6, 247),
+  background: Color.fromARGB(255, 194, 193, 195),
 );
 
 final theme = ThemeData().copyWith(
