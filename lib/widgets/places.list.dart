@@ -1,16 +1,29 @@
 import 'package:favourite_places_app/screens/places_details.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models.dart';
 import '../providers/user_places.dart';
 
-class PlacesList extends StatelessWidget {
+class PlacesList extends ConsumerStatefulWidget {
   final List<Place> places;
   const PlacesList({super.key, required this.places});
 
   @override
+  ConsumerState<PlacesList> createState() => _PlacesListState();
+}
+
+class _PlacesListState extends ConsumerState<PlacesList> {
+  // void _deletePlace(String placeId) {
+  //   ref.read(userPlaceProvider.notifier).deletePlace(placeId);
+  //   // Optionally, you can add code to navigate back or update the UI after deletion.
+  //   // For example, you might want to pop the current screen:
+  //   // Navigator.of(context).pop();
+  // }
+
+  @override
   Widget build(BuildContext context) {
-    if (places.isEmpty) {
+    if (widget.places.isEmpty) {
       return Center(
         child: Text(
           "No places added yet",
@@ -22,35 +35,54 @@ class PlacesList extends StatelessWidget {
       );
     }
     return ListView.builder(
-        itemCount: places.length,
+        itemCount: widget.places.length,
         itemBuilder: (ctx, index) => ListTile(
               leading: CircleAvatar(
                 radius: 20,
-                backgroundImage: FileImage(places[index].image),
+                backgroundImage: FileImage(widget.places[index].image),
               ),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (ctx) => PlaceDetailScreen(
-                      place: places[index],
+                      place: widget.places[index],
                     ),
                   ),
                 );
               },
               subtitle: Text(
-                places[index].location.address,
+                widget.places[index].location.address,
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ),
               title: Text(
-                places[index].title,
+                widget.places[index].title,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ),
               trailing: IconButton(
                 icon: Icon(Icons.delete),
-                onPressed: () {},
+                onPressed: () {
+                  _deletePlace(context, widget.places[index].id);
+                },
               ),
             ));
+  }
+
+  void _deletePlace(BuildContext context, String placeId) {
+    // Assuming you have access to your provider reference
+    ref.read(userPlaceProvider.notifier).deletePlace(placeId);
+
+    // Update the local 'places' list
+    // Make sure to call the appropriate method based on your actual implementation
+    ref.read(userPlaceProvider.notifier).removePlaceById(placeId);
+
+    // Show a snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Place deleted"),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 }
