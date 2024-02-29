@@ -2,6 +2,7 @@ import 'package:favourite_places_app/screens/places_details.dart';
 import 'package:flutter/material.dart';
 
 import '../models.dart';
+import '../providers/user_places.dart';
 
 class PlacesList extends StatelessWidget {
   final List<Place> places;
@@ -45,6 +46,10 @@ class PlacesList extends StatelessWidget {
                 places[index].title,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {},
               ),
             ));
   }

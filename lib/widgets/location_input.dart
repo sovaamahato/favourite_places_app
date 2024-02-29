@@ -198,13 +198,13 @@ class _LocationInputState extends State<LocationInput> {
               ),
             ),
             child: previewContent),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
         //adress show
         Text(
           _pickedLocation != null ? _pickedLocation!.address : "",
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -231,11 +231,16 @@ class _LocationInputState extends State<LocationInput> {
 //variable here is to get back the selected value(location) from the map screen
 
                 if (_currentLocation != null) {
+                  _currentLocation = await _getCurrentLocation();
+                  await _getAdressFromCoordinates();
                   final _getLocationFromMapScreen =
                       await Navigator.of(context).push<LatLng>(
                     MaterialPageRoute(
                       builder: (ctx) => MapScreen(
                         currentLocation: _pickedLocation!,
+                        //??
+                        // PlaceLocation(
+                        //     latitude: 0.5, longitude: 0.5, address: ''),
                         isSelecting: true,
                       ),
                     ),
@@ -243,8 +248,8 @@ class _LocationInputState extends State<LocationInput> {
                   if (_getLocationFromMapScreen == null) {
                     return;
                   }
-                  _savePlace(_getLocationFromMapScreen!.latitude,
-                      _getLocationFromMapScreen!.longitude);
+                  _savePlace(_getLocationFromMapScreen.latitude,
+                      _getLocationFromMapScreen.longitude);
                 }
               },
               icon: const Icon(
