@@ -37,8 +37,11 @@ class _ImageInputState extends State<ImageInput> {
   Widget build(BuildContext context) {
     Widget content = TextButton.icon(
       onPressed: _takePicture,
-      icon: const Icon(Icons.camera),
-      label: const Text("Take pictures"),
+      icon: const Icon(Icons.camera, color: Colors.purple),
+      label: const Text(
+        "Take pictures",
+        style: TextStyle(color: Colors.purple),
+      ),
     );
     if (_selectedImage != null) {
       content = InkWell(
@@ -55,6 +58,7 @@ class _ImageInputState extends State<ImageInput> {
         alignment: Alignment.center,
         height: 250,
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
             width: 1,
             color: Theme.of(context).colorScheme.primary.withOpacity(

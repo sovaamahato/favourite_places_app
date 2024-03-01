@@ -192,6 +192,7 @@ class _LocationInputState extends State<LocationInput> {
             height: 170,
             width: double.infinity,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 width: 1,
                 color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
@@ -215,10 +216,11 @@ class _LocationInputState extends State<LocationInput> {
                 _currentLocation = await _getCurrentLocation();
                 await _getAdressFromCoordinates();
               },
-              icon: const Icon(
-                Icons.location_on,
+              icon: const Icon(Icons.location_on, color: Colors.purple),
+              label: const Text(
+                "Get Current Location",
+                style: TextStyle(color: Colors.purple),
               ),
-              label: const Text("Get Current Location"),
             ),
             TextButton.icon(
               onPressed: () async {
@@ -254,8 +256,12 @@ class _LocationInputState extends State<LocationInput> {
               },
               icon: const Icon(
                 Icons.map,
+                color: Colors.purple,
               ),
-              label: const Text("Select on Map"),
+              label: const Text(
+                "Select on Map",
+                style: TextStyle(color: Colors.purple),
+              ),
             ),
           ],
         )

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:favourite_places_app/components/colors.dart';
 import 'package:favourite_places_app/models.dart';
 import 'package:favourite_places_app/providers/user_places.dart';
 import 'package:favourite_places_app/widgets/image_input.dart';
@@ -43,13 +44,22 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: background,
       appBar: AppBar(
-        title: const Text("Add New"),
+        backgroundColor: background2,
+        elevation: 0,
+        title: Text(
+          "Add New",
+          style: TextStyle(color: DeepPurple),
+        ),
       ),
       body: SingleChildScrollView(
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
+              const SizedBox(
+                height: 8,
+              ),
               TextField(
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.onBackground),
@@ -77,10 +87,19 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                   _selectedLocation = location;
                 },
               ),
-              ElevatedButton.icon(
-                onPressed: _savePlace,
-                icon: const Icon(Icons.add),
-                label: const Text("Add Place"),
+              InkWell(
+                onTap: _savePlace,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
+                  decoration: BoxDecoration(
+                      color: background2,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Text(
+                    "Add Place",
+                    style: TextStyle(color: DeepPurple, fontSize: 19),
+                  ),
+                ),
               ),
             ],
           )),

@@ -4,15 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
-final colorScheme = ColorScheme.fromSeed(
-  brightness: Brightness.light,
-  seedColor: Color.fromARGB(255, 34, 6, 247),
-  background: Color.fromARGB(255, 194, 193, 195),
-);
-
 final theme = ThemeData().copyWith(
-  scaffoldBackgroundColor: colorScheme.background,
-  colorScheme: colorScheme,
   textTheme: GoogleFonts.ubuntuCondensedTextTheme().copyWith(
     titleSmall: GoogleFonts.ubuntuCondensed(
       fontWeight: FontWeight.bold,

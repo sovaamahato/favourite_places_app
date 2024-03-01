@@ -1,3 +1,4 @@
+import 'package:favourite_places_app/components/colors.dart';
 import 'package:favourite_places_app/providers/user_places.dart';
 import 'package:favourite_places_app/screens/add_place.dart';
 import 'package:favourite_places_app/widgets/places.list.dart';
@@ -26,8 +27,13 @@ class _placesScreenState extends ConsumerState<PlacesScreen> {
     final userPlaces = ref.watch(userPlaceProvider);
 
     return Scaffold(
+      backgroundColor: background,
       appBar: AppBar(
-        title: const Text("my Places"),
+        backgroundColor: background2,
+        title: Text(
+          "my Places",
+          style: TextStyle(color: DeepPurple),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -37,7 +43,10 @@ class _placesScreenState extends ConsumerState<PlacesScreen> {
                 ),
               );
             },
-            icon: Icon(Icons.add),
+            icon: Icon(
+              Icons.add_a_photo_outlined,
+              color: DeepPurple,
+            ),
           ),
         ],
       ),

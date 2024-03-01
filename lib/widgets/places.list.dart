@@ -1,3 +1,4 @@
+import 'package:favourite_places_app/components/colors.dart';
 import 'package:favourite_places_app/screens/places_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,16 +44,15 @@ class _PlacesListState extends ConsumerState<PlacesList> {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(16)),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Container(
-                height: 160,
+                color: background2, borderRadius: BorderRadius.circular(16)),
+            child: Column(children: [
+              SizedBox(
+                height: 150,
                 width: double.infinity,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20)),
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16)),
                   child: Image(
                     isAntiAlias: true,
                     fit: BoxFit.cover,
@@ -61,7 +61,9 @@ class _PlacesListState extends ConsumerState<PlacesList> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,9 +71,9 @@ class _PlacesListState extends ConsumerState<PlacesList> {
                     Text(
                       widget.places[index].title,
                       style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 19,
-                      ),
+                          color: Colors.white,
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,7 +82,7 @@ class _PlacesListState extends ConsumerState<PlacesList> {
                           children: [
                             const Icon(
                               Icons.location_on_outlined,
-                              color: Colors.green,
+                              color: Color.fromARGB(255, 4, 153, 9),
                             ),
                             Text(
                               widget.places[index].location.address,
@@ -93,7 +95,7 @@ class _PlacesListState extends ConsumerState<PlacesList> {
                           icon: const Icon(
                             Icons.delete,
                             size: 20,
-                            color: Colors.red,
+                            color: Color.fromARGB(255, 194, 15, 2),
                           ),
                           onPressed: () {
                             _deletePlace(context, widget.places[index].id);

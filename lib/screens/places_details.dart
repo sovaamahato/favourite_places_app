@@ -1,3 +1,4 @@
+import 'package:favourite_places_app/components/colors.dart';
 import 'package:favourite_places_app/screens/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -46,9 +47,11 @@ class PlaceDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget preview = buildMapPreview();
+    //Widget preview = buildMapPreview();
     return Scaffold(
+        backgroundColor: background,
         appBar: AppBar(
+          backgroundColor: background2,
           title: Text(
             place.title,
           ),
@@ -67,55 +70,67 @@ class PlaceDetailScreen extends StatelessWidget {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                child: Column(
-                  children: [
-                    //map image----------------------------------
-                    GestureDetector(
-                      onTap: () {
-                        print(
-                            "-tappedddddddddddddddddddddddddddddddd0===========================");
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (ctx) => MapScreen(
-                                  currentLocation: place.location,
-                                  isSelecting: false,
-                                )));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        height: 80,
-                        width: 90,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(
-                            0,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //address-------------
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Container(
+                          decoration: const BoxDecoration(),
+                          child: Text(
+                            place.location.address,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(color: DeepPurple),
                           ),
                         ),
-                        child: preview,
                       ),
-                    ),
-                    //address-------------
-                    Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 16),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.transparent,
-                            Colors.black54,
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
+                      //map image----------------------------------
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => MapScreen(
+                                    currentLocation: place.location,
+                                    isSelecting: false,
+                                  )));
+                        },
+                        child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.transparent,
+                                  DeepPurple,
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            child: const Row(
+                              children: [
+                                Text(
+                                  "See location on map",
+                                  style: TextStyle(
+                                      fontSize: 18, letterSpacing: 1.3),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  Icons.location_on,
+                                  color: Color.fromARGB(255, 145, 39, 31),
+                                )
+                              ],
+                            )),
                       ),
-                      child: Text(
-                        place.location.address,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Theme.of(context).colorScheme.onBackground),
-                      ),
-                    )
-                  ],
+                    ],
+                  ),
                 ))
           ],
         ));
