@@ -4,6 +4,7 @@ import 'package:favourite_places_app/screens/add_place.dart';
 import 'package:favourite_places_app/widgets/places.list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 
 class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({super.key});
@@ -50,13 +51,18 @@ class _placesScreenState extends ConsumerState<PlacesScreen> {
           ),
         ],
       ),
+      bottomNavigationBar: Container(
+        height: 40,
+        width: double.infinity,
+        child: LottieBuilder.asset("assets/animation3.json"),
+      ),
       body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: FutureBuilder(
             future: _placesFuture,
             builder: (context, snapshot) =>
                 snapshot.connectionState == ConnectionState.waiting
-                    ? Center(
+                    ? const Center(
                         child: const CircularProgressIndicator(),
                       )
                     : PlacesList(places: userPlaces),

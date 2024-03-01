@@ -1,4 +1,5 @@
 import 'package:favourite_places_app/screens/places.dart';
+import 'package:favourite_places_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       title: 'Great Places',
       theme: theme,
       debugShowCheckedModeBanner: false,
-      home: const PlacesScreen(),
+      home: const SplashScreen(),
     );
   }
 }
