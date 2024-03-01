@@ -38,6 +38,8 @@ dependencies:
   google_fonts: ^6.1.0
   animate_do: ^3.1.2
   lottie: ^2.7.0
+  font_awesome_flutter: ^10.7.0
+  url_launcher: ^6.2.5
   # for auto generating id
   uuid: ^4.3.3
   flutter_riverpod: ^2.4.10

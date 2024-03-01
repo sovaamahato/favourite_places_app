@@ -41,7 +41,7 @@ class _PlacesListState extends ConsumerState<PlacesList> {
           );
         },
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.only(bottom: 10.0),
           child: Container(
             decoration: BoxDecoration(
                 color: background2, borderRadius: BorderRadius.circular(16)),

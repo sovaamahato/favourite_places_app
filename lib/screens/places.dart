@@ -1,10 +1,13 @@
 import 'package:favourite_places_app/components/colors.dart';
 import 'package:favourite_places_app/providers/user_places.dart';
 import 'package:favourite_places_app/screens/add_place.dart';
+import 'package:favourite_places_app/screens/my_drawer.dart';
 import 'package:favourite_places_app/widgets/places.list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+
+import 'developer_screen.dart';
 
 class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({super.key});
@@ -14,13 +17,42 @@ class PlacesScreen extends ConsumerStatefulWidget {
   }
 }
 
-class _placesScreenState extends ConsumerState<PlacesScreen> {
+class _placesScreenState extends ConsumerState<PlacesScreen>
+    with SingleTickerProviderStateMixin {
   late Future<void> _placesFuture;
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _placesFuture = ref.read(userPlaceProvider.notifier).loadPlace();
+
+    //for animation bus
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 10),
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: Offset(-1, 0.0),
+      end: Offset(0.9, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    //for looping effect
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Animation completed, reset to start from the left again
+        _controller.reset();
+        _controller.forward();
+      }
+    });
+
+    _controller.forward();
   }
 
   @override
@@ -51,10 +83,26 @@ class _placesScreenState extends ConsumerState<PlacesScreen> {
           ),
         ],
       ),
+      drawer: MyDrawer(),
       bottomNavigationBar: Container(
         height: 40,
         width: double.infinity,
-        child: LottieBuilder.asset("assets/animation3.json"),
+        child: Listener(
+          onPointerUp: (_) {
+            // Manually reset the animation when tapping on the screen
+            _controller.reset();
+            _controller.forward();
+          },
+          child: SlideTransition(
+            position: _offsetAnimation,
+            child: LottieBuilder.asset(
+              "assets/animation3.json",
+              width: double.infinity,
+              height: 40,
+              repeat: false,
+            ),
+          ),
+        ),
       ),
       body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -68,5 +116,11 @@ class _placesScreenState extends ConsumerState<PlacesScreen> {
                     : PlacesList(places: userPlaces),
           )),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
